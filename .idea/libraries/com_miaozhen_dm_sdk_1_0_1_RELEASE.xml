@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="com.miaozhen.dm.sdk-1.0.1-RELEASE">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/miaozhen/dm/sdk/com.miaozhen.dm.sdk/1.0.1-RELEASE/com.miaozhen.dm.sdk-1.0.1-RELEASE.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
