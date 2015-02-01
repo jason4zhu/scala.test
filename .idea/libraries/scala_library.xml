@@ -8,8 +8,6 @@
     <JAVADOC>
       <root url="file://$USER_HOME$/general/scala-2.11.5/doc/tools" />
     </JAVADOC>
-    <SOURCES>
-      <root url="jar://$USER_HOME$/general/scala-2.11.5/lib/scala-library-src.jar!/" />
-    </SOURCES>
+    <SOURCES />
   </library>
 </component>

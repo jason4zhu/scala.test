@@ -32,7 +32,6 @@ object EtlRegionDist {
 
   def main(args: Array[String]): Unit = {
     // -- configuration --
-    println("JUDKING_HEADER")
     val hconf = new Configuration()
     val conf = new SparkConf().setAppName("ETL_Region_Distribution_[ZHUDI]")
     val sc = new SparkContext(conf)
@@ -45,6 +44,26 @@ object EtlRegionDist {
 
     // createSchemaRDD is used to implicitly convert an RDD to a SchemaRDD.
     import sqlContext.createSchemaRDD
+
+
+    val res = sc.textFile("/user/hadoop/zhudi/etlsample.txt").map(
+          _.split("\\^") map {
+            field =>
+              var pair = field.split('=')
+              (pair(0) -> pair(1))
+          } toMap
+    ).collect()
+
+
+    println("JUDKING_HEADER")
+    val ipToRegion = new IpToRegionFunction
+//    val rcode = ipToRegion.evaluate("27.214.13.244", "/tong/data/resource/dicmanager/IPlib-Region-000000000000000000000008-top100-top100-top100-merge-20141024182445")
+//    println(rcode)
+
+    for(r <- res) {
+      println(r("uuid")+"\t"+r("ip")+"\t"+ipToRegion.evaluate(r("ip"), "/tong/data/resource/dicmanager/IPlib-Region-000000000000000000000008-top100-top100-top100-merge-20141024182445"))
+    }
+    println("JUDKING_TAILER")
 
 
     /**
@@ -75,3 +94,6 @@ object EtlRegionDist {
 
   }
 }
+
+
+case class ETL(uuid: String, ip: String, plt: Int)
