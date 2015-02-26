@@ -37,9 +37,10 @@ object EtlLineCount {
     val sc = new SparkContext(conf)
 
 
+
         // -- Read multiple HDFS files into a merged HadoopFileRDD --
         var hadoopFileSeqs = Seq[org.apache.spark.rdd.RDD[(org.apache.hadoop.io.LongWritable, org.apache.hadoop.io.Text)]]()
-        getFilePaths(hconf, "/tong/data/output/dailyMerger/20140318").foreach(path => {
+        getFilePaths(hconf, "/tong/data/output/dailyMerger/20141205").foreach(path => {
           val strPath = path.toString
           if(strPath contains "campaign")  {
             val hadoopFile = sc.newAPIHadoopFile(

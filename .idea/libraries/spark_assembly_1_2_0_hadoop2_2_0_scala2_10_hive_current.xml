@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="spark-assembly-1.2.0-hadoop2.2.0_scala2_10_hive_current">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/Downloads/tmp/spark-assembly-1.2.0-hadoop2.2.0_scala2_10_hive_current.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/Downloads/tmp/spark-assembly-1.2.0-hadoop2.2.0_scala2_10_hive_current.jar!/" />
+      <root url="jar://$USER_HOME$/Downloads/tmp/spark-assembly-1.2.0-hadoop2.2.0_scala2_10_hive_current.jar!/" />
+    </SOURCES>
+  </library>
+</component>

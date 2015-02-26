@@ -4,16 +4,18 @@ import org.apache.commons.io.IOUtils;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.hive.ql.exec.UDF;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.Serializable;
 import java.util.TreeMap;
 
 /**
  * Created by Season on 14-7-28.
  */
-public class IpToRegionFunction {
+public class IpToRegionFunction extends UDF implements Serializable{
 
     //public static final Log l4j = LogFactory.getLog(IpToRegionFunction.class);
 

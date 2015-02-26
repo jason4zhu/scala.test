@@ -1,11 +1,24 @@
 <component name="libraryTable">
   <library name="scala-compiler">
     <CLASSES>
-      <root url="jar://$USER_HOME$/general/scala-2.11.5/lib/scala-compiler.jar!/" />
-      <root url="jar://$USER_HOME$/general/scala-2.11.5/lib/scala-library.jar!/" />
-      <root url="jar://$USER_HOME$/general/scala-2.11.5/lib/scala-reflect.jar!/" />
+      <root url="jar://$USER_HOME$/general/scala-2.10.4/lib/akka-actors.jar!/" />
+      <root url="jar://$USER_HOME$/general/scala-2.10.4/lib/jline.jar!/" />
+      <root url="jar://$USER_HOME$/general/scala-2.10.4/lib/scala-actors-migration.jar!/" />
+      <root url="jar://$USER_HOME$/general/scala-2.10.4/lib/scala-actors.jar!/" />
+      <root url="jar://$USER_HOME$/general/scala-2.10.4/lib/scala-compiler.jar!/" />
+      <root url="jar://$USER_HOME$/general/scala-2.10.4/lib/scala-library.jar!/" />
+      <root url="jar://$USER_HOME$/general/scala-2.10.4/lib/scala-reflect.jar!/" />
+      <root url="jar://$USER_HOME$/general/scala-2.10.4/lib/scala-swing.jar!/" />
+      <root url="jar://$USER_HOME$/general/scala-2.10.4/lib/scalap.jar!/" />
+      <root url="jar://$USER_HOME$/general/scala-2.10.4/lib/typesafe-config.jar!/" />
     </CLASSES>
     <JAVADOC />
-    <SOURCES />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/general/scala-2.10.4/src/fjbg-src.jar!/" />
+      <root url="jar://$USER_HOME$/general/scala-2.10.4/src/msil-src.jar!/" />
+      <root url="jar://$USER_HOME$/general/scala-2.10.4/src/scala-actors-src.jar!/" />
+      <root url="jar://$USER_HOME$/general/scala-2.10.4/src/scala-library-src.jar!/" />
+      <root url="jar://$USER_HOME$/general/scala-2.10.4/src/scala-partest-src.jar!/" />
+    </SOURCES>
   </library>
 </component>
