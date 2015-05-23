@@ -1,6 +1,7 @@
 package com.miaozhen.etl.region.distribution
 
 import org.apache.spark.{SparkContext, SparkConf}
+import org.apache.spark.SparkContext._
 
 /**
  * Created by jasonzhu on 3/2/15.
@@ -29,6 +30,8 @@ object SimpleSparkSQL {
 //    // The results of SQL queries are SchemaRDDs and support all the normal RDD operations.
 //    // The columns of a row in the result can be accessed by ordinal.
 //    teenagers.map(t => "Name: " + t(0)).collect().foreach(println)
+
+
   }
 
 

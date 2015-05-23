@@ -2,9 +2,12 @@ package scala.test
 
 import java.io.{IOException, FileNotFoundException, FileReader, File}
 import java.net.MalformedURLException
+import java.util.regex.Matcher
 import javax.print.DocFlavor.URL
 
+import scala.collection.mutable.ArrayBuffer
 import scala.io.Source
+import Element.elem
 
 /**
  * Created by jasonzhu on 11/2/15.
@@ -290,7 +293,7 @@ object ProgrammingInScalaTest {
 
 
     def sum(a: Int, b: Int , c: Int): Int = a+b+c
-    val f2 = sum _          //`Partially applied functions`
+    val f2 = sum _          //`Partially applied functions`   //GRAMMAR REFERENCE: http://stackoverflow.com/questions/5009411/two-ways-of-defining-functions-in-scala-what-is-the-difference
     println(f2(1,2,3))
     val f3 = sum(1, _:Int, 3)
     println(f3(1))
@@ -365,7 +368,7 @@ object ProgrammingInScalaTest {
 
     /**
      * One way in which you can make the client code look a bit more like a built-in control structure
-     * is to use curly braces instead of parentheses to sur- round the argument list. In any method
+     * is to use curly braces instead of parentheses to surround the argument list. In any method
      * invocation in Scala in which you’re passing in exactly one argument, you can opt to use curly
      * braces to surround the argument instead of parentheses.
      */
@@ -437,8 +440,187 @@ object ProgrammingInScalaTest {
     byNameAssert(2/0 == 0)
 
 
+    for(ele <- (Array(1,2,3) ++ Array(4,5,6)))  {
+      println(ele)
+    }
 
 
+    for((ele1, ele2) <- Array(1, 2) zip Array(3, 4, 5)) {
+      println("("+ele1+", "+ele2+")")
+    }
+
+
+    println(elem(Array("hello")) beside elem(Array("world!!!")))
+
+
+
+
+    println("abc".substring(2) == "c")
+    println("abc".substring(2) equals "c")
+    println("abc".substring(2) eq "c")  //`reference equality`
+
+
+
+    //Type Nothing is at the very bottom of Scala’s class hierarchy; it is a sub- type of every other type.
+    //one use of Nothing is that it signals abnormal termination.
+    def error(msg: String): Nothing = throw new RuntimeException(msg)
+
+
+
+    //`trait`
+    trait Philosophical {
+      def philosophize(): Unit =  {
+        println("I consume memory, therefore I am!")
+      }
+    }
+
+    //If you wish to mix a trait into a class that explicitly extends a superclass, you use extends to indicate the superclass and with to mix in the trait.
+    class Animal
+    trait HasLegs
+
+    class Frog extends Animal with Philosophical with HasLegs {  //`mix in trait`
+      override def toString = "green"
+    }
+
+    val frog = new Frog
+    frog.philosophize()
+
+    //traits can enrich a thin interface, making it into a rich interface.
+    class Point(val x: Int, val y: Int)
+    trait Rectangular {
+      def topLeft: Point
+      def bottomRight: Point
+
+      def left = topLeft.x
+      def right = bottomRight.x
+      def width = right-left
+
+    }
+
+    abstract class Component extends Rectangular  {
+
+    }
+
+    class Rectangle(val topLeft: Point, val bottomRight: Point) extends Rectangular {
+
+    }
+
+    val rect = new Rectangle(new Point(1,1), new Point(10, 10))
+    println(rect.width)
+
+    //Rational extends trait Ordered
+    val half = new Rational(1, 2)
+    val third = new Rational(1, 3)
+    println(half < third)
+
+    abstract class IntQueue {
+      def get(): Int
+      def put(x: Int)
+    }
+
+    class BasicIntQueue extends IntQueue  {
+      private val buf = new ArrayBuffer[Int]
+
+      override def get(): Int = buf.remove(0)
+
+      override def put(x: Int): Unit = {buf += x}
+    }
+
+    // The Doubling trait has two funny things going on. The first is that it declares a superclass, IntQueue.
+    // This declaration means that the trait can only be mixed into a class that also extends IntQueue.
+    // Thus, you can mix Doubling into BasicIntQueue, but not into Rational.
+    trait Doubling extends IntQueue  {
+      abstract override def put(x: Int) {super.put(2 * x)}    //This arrangement is frequently needed with traits that implement `stackable modifications`. To tell the compiler you are doing this on purpose, you must mark such methods as abstract override.
+    }
+
+    class MyQueue extends BasicIntQueue with Doubling
+//    val myQueue = new MyQueue
+    val myQueue = new BasicIntQueue with Doubling // simpler way
+    myQueue.put(10)
+    println(myQueue.get)
+
+    trait Incrementing extends IntQueue {
+      abstract override def put(x: Int)  {super.put(x + 1)}
+    }
+
+    trait FilteringNonNegative extends IntQueue {
+      abstract override def put(x: Int): Unit = {
+        if(x >= 0) super.put(x)
+      }
+    }
+
+    // The order of mixins is significant.
+    // traits further to the right take effect first.（最后边的先执行，也即，FilteringNonNegative之后才会执行Incrementing）
+    // As hinted previously, the answer is `linearization`. When you instantiate a class with new, Scala takes the class and all of its inherited classes and traits and puts them in a single, linear order. Then, whenever you call super inside one of those classes, the invoked method is the next one up the chain. If all of the methods but the last call super, the net result is stackable behavior.
+    val queue = new BasicIntQueue with Incrementing with FilteringNonNegative
+    queue.put(-1); queue.put(0); queue.put(1)
+    println(queue.get)
+    println(queue.get)
+
+
+
+    //Scala provides a package named _root_ that is outside any package a user can write. Put another way, every top-level package you can write is treated as a member of package _root_.
+    import _root_.java.lang.String
+
+
+    //import Pattern and Matcher from java.util.regex package, meanwhile, rename Pattern to Ptn
+    import java.util.regex.{Pattern => Ptn, Matcher}
+
+    //This imports all members of java.util.regex except Pattern. A clause of the form “<original-name> => _” excludes <original-name> from the names that are imported. In a sense, renaming something to ‘_’ means hiding it altogether.
+    import java.util.regex.{Pattern => _, _}
+
+
+    //`implicit imports`
+    //the following three import clauses had been added to the top of every source file with extension “.scala”
+    import java.lang._ // everything in the java.lang package
+    import scala._     // everything in the scala package
+    import Predef._    // everything in the Predef object
+
+
+    //`access modifiers`
+    class Outer {
+
+      class Inner {
+        private def f() {
+          println("f")
+        }
+
+        class InnerMost {
+          f() // OK }
+        }
+      }
+//      (new Inner).f() // error: f is not accessible
+
+    }
+
+    class Super {
+      protected def f() { println("f") }
+    }
+    class Sub extends Super {
+      f()
+    }
+    class Other {
+//      (new Super).f()  // error: f is not accessible
+    }
+
+    //`scope of modifier`
+    //Access modifiers in Scala can be augmented with qualifiers. A modifier of the form private[X] or protected[X] means that access is private or protected “up to” X, where X designates some enclosing package, class or singleton object.
+//    package bobsrockets
+//    package navigation {
+//      private[bobsrockets] class Navigator {
+//        protected[navigation] def useStarChart() {}
+//        class LegOfJourney {
+//          private[Navigator] val distance = 100
+//        }
+//        private[this] var speed = 200
+//      }
+//    }
+//    package launch {
+//      import navigation._
+//      object Vehicle {
+//        private[launch] val guide = new Navigator
+//      }
+//    }
 
 
 
@@ -492,6 +674,9 @@ object ProgrammingInScalaTest {
     }
   }
 
+
+
+
 }
 
 
@@ -542,7 +727,7 @@ object ChecksumAccumulator  {
  * @param n
  * @param d
  */
-class Rational(n:Int, d:Int)    {
+class Rational(n:Int, d:Int) extends Ordered[Rational]   {
   require(d != 0)
   //`parametric fields`
   private val g = gcd(n.abs, d.abs)
@@ -581,4 +766,101 @@ class Rational(n:Int, d:Int)    {
   private def gcd(a: Int, b: Int): Int = {
     if (b == 0) a else gcd(b, a % b)
   }
+
+  override def compare(that: Rational): Int = {
+    (this.numer*that.denom) - (that.numer*this.denom)
+  }
 }
+
+
+
+
+
+
+//Chapter_10
+abstract class Element {
+  /**
+   * 下面说下统一访问原则(uniform access principle)[which says that client code should not be affected by a decision to implement an attribute as a field or method]
+   * 对于无参数方法的方法形式 obj.width 又像是在直接引用 obj 对象的 width 属性，这种统一性就叫做统一访问原则，就是说客代码不应由‘属性’ 是通过字段实现还是方法实现而受影响。例如前面的 def width: Int 可以写成 val width: Int，然而 obj.width 访问形式不变。
+   * 由于 Java 中没有统一访问原则，所以关于是 string.length()，而不 string.length；是 array.length，而不是 array.length() 的问题会突然间让人很迷惑。有了统一访问原则的 Scala，以及结合 length 方法是无副作用的，就会直接写成 string.length 和 array.length，而犯不着为此犹豫不决。
+   */
+  def contents: Array[String]   //`parameterless methods` | By contrast, meth- ods defined with empty parentheses, such as def height(): Int, are called empty-paren methods.
+  def height: Int = contents.length
+  def width: Int = if(height == 0) 0 else contents(0).length
+
+
+  def above(that:Element): Element = {
+    elem(this.contents ++ that.contents)
+  }
+
+  def beside(that:Element): Element = {
+    //--imperative way of implementing
+    //    val contents = new Array[String](this.contents.length)
+    //    for(i <- 0 until this.contents.length)  {
+    //      contents(i) = this.contents(i) + that.contents(i)
+    //    }
+    //    new ArrayElement2(contents)
+
+    //--more concise way to implement
+    elem(
+      for (
+        (line1, line2) <- this.contents zip that.contents
+      ) yield line1+line2
+    )
+  }
+
+
+  override def toString = contents mkString "\n"
+}
+
+
+object Element  {
+  private class ArrayElement(conts: Array[String]) extends Element  {
+    val contents: Array[String] = conts   //Another difference is that in Scala, fields and methods belong to the same namespace. This makes it possible for a field to override a parameterless method.
+
+    //--cannot define the following method and field simultaneously--
+    //  private var f = 0
+    //  def f: Int = 1
+
+    final val ARRAY_NAME: String = "ARRAY_ELEMENT"  //cannot be overriden
+  }
+
+
+  //`parametric field` | Note that now the contents parameter is prefixed by val. This is a shorthand that defines at the same time a parameter and field with the same name.
+  private class ArrayElement2(val contents: Array[String]) extends Element
+
+
+  private class LineElement(s: String) extends ArrayElement2(Array(s))  {
+    override def width = s.length
+    override def height = 1     //`override` keyword can prevent from the Fragile Base Class Problem [http://en.wikipedia.org/wiki/Fragile_base_class]
+  }
+
+
+  private class UniformElement(
+                        ch: Char,
+                        override val width: Int,
+                        override val height: Int
+                        ) extends Element {
+    private val line = ch.toString * width
+    def contents = Array.fill(height)(line)
+  }
+
+
+
+  def elem(contents: Array[String]): Element =  {
+    new ArrayElement2(contents)
+  }
+
+  def elem(chr: Char, width: Int, height: Int): Element =  {
+    new UniformElement(chr, width, height)
+  }
+
+  def elem(line:String): Element = {
+    new LineElement(line)
+  }
+}
+
+
+
+
+

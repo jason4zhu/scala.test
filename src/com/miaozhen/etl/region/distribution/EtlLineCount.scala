@@ -38,24 +38,24 @@ object EtlLineCount {
 
 
 
-        // -- Read multiple HDFS files into a merged HadoopFileRDD --
-        var hadoopFileSeqs = Seq[org.apache.spark.rdd.RDD[(org.apache.hadoop.io.LongWritable, org.apache.hadoop.io.Text)]]()
-        getFilePaths(hconf, "/tong/data/output/dailyMerger/20141205").foreach(path => {
-          val strPath = path.toString
-          if(strPath contains "campaign")  {
-            val hadoopFile = sc.newAPIHadoopFile(
-              strPath,
-              classOf[DMCombineFileInputFormat],
-              classOf[LongWritable],
-              classOf[Text],
-              hconf)
-            hadoopFileSeqs :+= hadoopFile
-          }
-        })
-        val hadoopFiles = sc.union(hadoopFileSeqs)
+    // -- Read multiple HDFS files into a merged HadoopFileRDD --
+    var hadoopFileSeqs = Seq[org.apache.spark.rdd.RDD[(org.apache.hadoop.io.LongWritable, org.apache.hadoop.io.Text)]]()
+    getFilePaths(hconf, "/tong/data/output/dailyMerger/20141205").foreach(path => {
+      val strPath = path.toString
+      if(strPath contains "campaign")  {
+        val hadoopFile = sc.newAPIHadoopFile(
+          strPath,
+          classOf[DMCombineFileInputFormat],
+          classOf[LongWritable],
+          classOf[Text],
+          hconf)
+        hadoopFileSeqs :+= hadoopFile
+      }
+    })
+    val hadoopFiles = sc.union(hadoopFileSeqs)
 
-        // -- Computation --
-        val lineCounts = hadoopFiles.map(line => (1L)).reduce((a, b) => (a+b))
-        println("LineCounts=[%s]".format(lineCounts))
+    // -- Computation --
+    val lineCounts = hadoopFiles.map(line => (1L)).reduce((a, b) => (a+b))
+    println("LineCounts=[%s]".format(lineCounts))
   }
 }
